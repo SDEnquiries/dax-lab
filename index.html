@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>DAX Practice Lab · Switch Direction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#2a2230;--muted:#6b6272;--bg:#f6f3f7;--panel:#fff;--line:#e6dfe8;--soft:#faf8fb;--accent:#731f7b;--accent-d:#5a1760;--accent-l:#f3e9f4;--amber:#2293d2;--amber-l:#e8f4fb;--ok:#5f8a1f;--ok-l:#f0f6e4;--err:#d32940;--err-l:#fcebee;--purple:#731f7b;--blue:#2293d2;--red:#d32940;--green:#93bc41;--serif:'Fraunces',Georgia,'Times New Roman',serif;--code:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+*{box-sizing:border-box}
+body{margin:0;font-family:"DM Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:15px;line-height:1.5}
+header{background:#fff;color:var(--ink);padding:10px 28px;display:flex;align-items:center;gap:28px;flex-wrap:wrap;position:sticky;top:0;z-index:5;box-shadow:0 1px 0 rgba(0,0,0,.04)}
+.stripe{display:flex;height:6px;position:sticky;top:0}.stripe i{flex:1}.stripe i:nth-child(1){background:var(--purple)}.stripe i:nth-child(2){background:var(--blue)}.stripe i:nth-child(3){background:var(--red)}.stripe i:nth-child(4){background:var(--green)}
+.hdr{position:sticky;top:0;z-index:5}
+.brand{flex-direction:row!important;align-items:center;gap:12px}.brand img{height:54px;width:auto}.brand .bt{display:flex;flex-direction:column}
+.brand{display:flex;flex-direction:column}
+.brand b{font-family:var(--serif);font-size:22px;color:var(--purple);font-weight:700;line-height:1.1}
+.brand span{font-size:12.5px;color:var(--muted)}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav button{background:transparent;color:var(--ink);font-weight:500;border:0;padding:8px 14px;border-radius:8px;font:inherit;cursor:pointer}
+nav button:hover{background:var(--accent-l);color:var(--purple)}
+nav button.on{background:var(--purple);color:#fff;font-weight:700}
+.prog{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.bar{width:140px;height:8px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--purple),var(--blue),var(--red),var(--green));width:0;transition:width .4s}
+main{max-width:1280px;margin:0 auto;padding:22px}
+.view{display:none}.view.on{display:block}
+.grid{display:grid;grid-template-columns:260px 1fr;gap:20px}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.card+.card{margin-top:16px}
+h2{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--purple);margin:0 0 6px;line-height:1.2}
+h3{font-family:var(--serif);font-size:18px;color:var(--purple);margin:18px 0 8px}
+h4{font-size:12.5px;text-transform:uppercase;letter-spacing:1.4px;color:#1b6f9e;margin:0 0 8px}
+p{margin:0 0 10px}
+code,.mono{font-family:var(--code);font-size:13.5px}
+code{background:#f0eee8;padding:1px 5px;border-radius:4px}
+pre{font-family:var(--code);font-size:13.5px;background:#2e1532;color:#e8ecf3;padding:12px 14px;border-radius:8px;overflow:auto;margin:8px 0;white-space:pre-wrap}
+.lesson-list{list-style:none;margin:0;padding:0}
+.lesson-list li{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:14px}
+.lesson-list li:hover{background:var(--soft)}
+.lesson-list li.on{background:var(--accent-l);font-weight:600}
+.lesson-list .n{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:12px;flex:none;color:var(--muted);background:#fff}
+.lesson-list li.done .n{background:var(--ok);border-color:var(--ok);color:#fff}
+.part{font-size:11px;text-transform:uppercase;letter-spacing:1.3px;color:#1b6f9e;font-weight:700;margin:14px 10px 4px}
+.part:first-child{margin-top:0}
+.concept{background:var(--soft);border-left:4px solid var(--accent);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0}
+.task{background:var(--amber-l);border-left:4px solid var(--blue);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0}
+.editor{border:1.5px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.editor:focus-within{border-color:var(--accent)}
+.editor .lbl{background:var(--soft);padding:7px 12px;border-bottom:1px solid var(--line);font-family:var(--code);font-size:13.5px;color:var(--accent-d);display:flex;gap:8px;align-items:center}
+.editor .lbl input{font:inherit;border:1px solid var(--line);border-radius:6px;padding:3px 8px;min-width:200px;color:var(--ink)}
+.editor textarea{width:100%;border:0;outline:0;resize:vertical;min-height:96px;padding:12px;font-family:var(--code);font-size:14.5px;line-height:1.55;color:var(--ink)}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+button.b{font:inherit;font-size:14px;border-radius:999px;padding:8px 14px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink)}
+button.b:hover{border-color:#bdb8aa}
+button.p{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+button.p:hover{background:var(--accent-d)}
+button.s{padding:4px 10px;font-size:13px}
+.kbd{font-size:12px;color:var(--muted)}
+.msg{margin-top:12px;padding:11px 14px;border-radius:8px;font-size:14px}
+.msg.ok{background:var(--ok-l);color:#3f5f10;border:1px solid #cfe3a6}
+.msg.err{background:var(--err-l);color:#7f231d;border:1px solid #f0c4bf}
+.msg.info{background:var(--accent-l);color:var(--accent-d);border:1px solid #c3e0de}
+.hint{display:none}
+table.m{border-collapse:collapse;width:100%;font-size:14px;margin-top:6px}
+table.m th,table.m td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+table.m th:first-child,table.m td:first-child{text-align:left}
+table.m thead th{background:var(--soft);font-weight:600;font-size:13px;color:var(--muted);position:sticky;top:0}
+table.m tr.tot td{font-weight:700;border-top:2px solid var(--ink)}
+table.m td.cell{cursor:pointer}
+table.m td.cell:hover{background:var(--accent-l)}
+table.m td.sel{background:#fff6d6!important;outline:2px solid var(--green);outline-offset:-2px}
+.blank{color:#b3ad9f;font-style:italic}
+.fields{font-size:13.5px}
+.fields details{margin-bottom:6px}
+.fields summary{cursor:pointer;font-weight:600;padding:4px 0}
+.fields .f{display:flex;align-items:center;gap:6px;padding:3px 6px 3px 16px;border-radius:6px;cursor:pointer;font-family:var(--code);font-size:12.5px}
+.fields .f:hover{background:var(--accent-l)}
+.fields .f .x{margin-left:auto;color:var(--muted);border:0;background:none;cursor:pointer;font-size:14px;padding:0 4px}
+.fields .f .x:hover{color:var(--err)}
+.tag{font-size:10.5px;padding:1px 5px;border-radius:4px;background:#ece9e1;color:var(--muted);font-family:-apple-system,"Segoe UI",sans-serif}
+.tag.m{background:var(--amber-l);color:#8a5d0b}
+.tag.c{background:var(--accent-l);color:var(--accent-d)}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:end}
+.row label{display:flex;flex-direction:column;font-size:12.5px;color:var(--muted);gap:4px}
+select,input[type=text]{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:13px;cursor:pointer;background:#fff;user-select:none}
+.chip input{margin:0}
+.chip.on{background:var(--accent-l);border-color:#b6d9d6}
+.ctxbox{margin-top:12px;font-size:14px}
+.ctxbox .f{display:inline-block;background:var(--amber-l);border:1px solid #efd9a6;border-radius:6px;padding:2px 8px;margin:2px 4px 2px 0;font-family:var(--code);font-size:12.5px}
+.model{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;margin:10px 0 6px}
+.tbl{border:1.5px solid var(--line);border-radius:10px;min-width:170px;background:#fff;overflow:hidden}
+.tbl b{display:block;background:var(--blue);color:#fff;padding:6px 12px;font-size:14px}
+.tbl.fact b{background:var(--purple)}
+.tbl div{font-family:var(--code);font-size:12.5px;padding:2px 12px}
+.tbl div:last-child{padding-bottom:8px}
+.tbl div.key{font-weight:700}
+.tbl div.cc{color:var(--accent-d)}
+.link{display:flex;flex-direction:column;align-items:center;font-size:12px;color:var(--muted);padding:0 6px}
+.link span.l{width:80px;height:2px;background:var(--ink);margin:4px 0}
+.datawrap{max-height:480px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+.cheat{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.fn{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#fff}
+.fn .sig{font-family:var(--code);font-weight:700;color:var(--accent-d);font-size:14px}
+.fn p{font-size:13.5px;margin:6px 0}
+.fn pre{font-size:12.5px;margin:6px 0 8px;padding:8px 10px}
+.chal{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:8px;background:#fff}
+.chal pre{display:none}
+.small{font-size:13px;color:var(--muted)}
+.hide{display:none!important}
+footer{background:#fff;margin-top:28px;border-top:1px solid var(--line)}footer .in{max-width:1280px;margin:0 auto;padding:22px;display:flex;gap:20px;align-items:center;flex-wrap:wrap}footer img{height:40px}footer .t{font-family:var(--serif);color:var(--purple);font-size:17px;font-weight:600}footer a{color:var(--purple);font-weight:700}footer .r{margin-left:auto;font-size:13px;color:var(--muted);text-align:right}
+.eyebrow{font-size:12.5px;text-transform:uppercase;letter-spacing:1.6px;color:#1b6f9e;font-weight:700}
+.welcome{display:grid;grid-template-columns:1.3fr 1fr;gap:20px}
+@media(max-width:860px){.welcome{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="hdr"><header>
+  <div class="brand"><img alt="Switch Direction" src="data:image/png;base64,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"><div class="bt"><b>DAX Practice Lab</b><span>Switch Direction · Power BI training</span></div></div>
+  <nav id="nav">
+    <button data-v="lessons" class="on">Lessons</button>
+    <button data-v="play">Playground</button>
+    <button data-v="data">Data model</button>
+    <button data-v="cheat">Cheat sheet</button>
+  </nav>
+  <div class="prog"><span id="progTxt">0 of 14 lessons</span><div class="bar"><i id="progBar"></i></div></div>
+</header><div class="stripe"><i></i><i></i><i></i><i></i></div></div>
+<main>
+
+<!-- LESSONS -->
+<section class="view on" id="v-lessons">
+  <div class="grid">
+    <aside class="card" style="align-self:start"><ul class="lesson-list" id="lessonList"></ul>
+      <div style="margin-top:14px;border-top:1px solid var(--line);padding-top:10px"><button class="b s" id="resetAll">Reset all progress</button></div>
+    </aside>
+    <div id="lessonPane"></div>
+  </div>
+</section>
+
+<!-- PLAYGROUND -->
+<section class="view" id="v-play">
+  <div class="grid">
+    <aside class="card fields" style="align-self:start">
+      <h4>Fields</h4>
+      <p class="small">Click a field to insert it into your formula.</p>
+      <div id="fieldList"></div>
+    </aside>
+    <div>
+      <div class="card">
+        <h2>Playground</h2>
+        <p class="small">Write any DAX you like. Save it as a <b>measure</b> (calculated on the fly, responds to filters) or as a <b>calculated column</b> (worked out once for every row of a table).</p>
+        <div class="editor">
+          <div class="lbl"><input id="pgName" type="text" placeholder="Name, e.g. Total Sales"> =</div>
+          <textarea id="pgExpr" spellcheck="false" placeholder="e.g. SUM(Sales[Quantity])"></textarea>
+        </div>
+        <div class="btns">
+          <button class="b p" id="pgSaveM">Save as measure</button>
+          <button class="b" id="pgSaveC">Save as calculated column on</button>
+          <select id="pgColTable"></select>
+          <button class="b" id="pgTest">Quick test</button>
+          <span class="kbd">Ctrl/⌘ + Enter = save measure</span>
+        </div>
+        <div id="pgMsg"></div>
+      </div>
+
+      <div class="card">
+        <h2>Matrix</h2>
+        <p class="small">This works like a Power BI matrix visual. Each cell runs your measure with a different <b>filter context</b>. Click any cell to see which filters were applied.</p>
+        <div class="row">
+          <label>Rows<select id="mxRows"></select></label>
+          <label>Columns<select id="mxCols"></select></label>
+          <label>Slicer<select id="mxSlF"></select></label>
+          <label>Slicer value<select id="mxSlV"></select></label>
+        </div>
+        <h4 style="margin-top:14px">Measures to show</h4>
+        <div class="chips" id="mxMeasures"></div>
+        <div id="mxOut" style="margin-top:12px;overflow:auto"></div>
+        <div class="ctxbox" id="mxCtx"></div>
+      </div>
+
+      <div class="card">
+        <h2>Challenges</h2>
+        <p class="small">No auto-marking here — try each one, check your numbers in the matrix, then reveal a model answer.</p>
+        <div id="chalList"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DATA -->
+<section class="view" id="v-data">
+  <div class="card">
+    <h2>The data model</h2>
+    <p>A small cycle-shop business. <b>Sales</b> is the fact table — one row per order line. <b>Products</b> and <b>Stores</b> are lookup (dimension) tables. Filters flow from the "1" side to the "many" side, so filtering Products[Category] also filters Sales.</p>
+    <div class="model" id="modelDiag"></div>
+  </div>
+  <div class="card">
+    <div class="row"><label>Table<select id="dataTable"></select></label><span class="small" id="dataCount"></span></div>
+    <div class="datawrap" style="margin-top:12px"><div id="dataOut"></div></div>
+  </div>
+</section>
+
+<!-- CHEAT -->
+<section class="view" id="v-cheat">
+  <div class="card">
+    <h2>Cheat sheet</h2>
+    <p class="small">The DAX functions this lab understands. Click <b>Try it</b> to load an example into the Playground.</p>
+    <div class="row" style="margin:8px 0 14px"><label>Search<input type="text" id="cheatQ" placeholder="e.g. CALCULATE"></label></div>
+    <div id="cheatOut"></div>
+  </div>
+</section>
+</main>
+<div class="stripe" style="position:static"><i></i><i></i><i></i><i></i></div>
+<footer><div class="in"><img alt="Switch Direction" src="data:image/png;base64,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"><div><div class="t">Leadership, people &amp; digital skills training that sticks.</div><div class="small">Want help with Power BI or DAX for your team? <a href="https://switchdirection.co.uk/" target="_blank" rel="noopener">switchdirection.co.uk</a></div></div><div class="r">© Switch Direction<br>Ipswich, Suffolk</div></div></footer>
+
+<script>
+/*ENGINE START*/
+const DAX = (function(){
+  class DaxError extends Error{}
+
+  function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}}
+
+  function buildData(){
+    const P=[
+      [1,'Road Bike','Bikes',850,520],[2,'Mountain Bike','Bikes',720,430],[3,'Kids Bike','Bikes',260,150],
+      [4,'Helmet','Accessories',45,18],[5,'Bike Lock','Accessories',30,11],[6,'Water Bottle','Accessories',8,2.5],
+      [7,'Cycling Jersey','Clothing',55,22],[8,'Gloves','Clothing',20,7]
+    ].map(r=>({ProductID:r[0],Product:r[1],Category:r[2],ListPrice:r[3],UnitCost:r[4]}));
+    const S=[[1,'Ipswich','East'],[2,'Colchester','East'],[3,'Leeds','North'],[4,'York','North'],[5,'Brighton','South']]
+      .map(r=>({StoreID:r[0],Store:r[1],Region:r[2]}));
+    const r=mulberry32(20261120);
+    const pw=[[1,6],[2,7],[3,5],[4,14],[5,12],[6,18],[7,10],[8,12]];
+    const sw=[[1,30],[2,22],[3,20],[4,16],[5,12]];
+    const pick=w=>{const tot=w.reduce((s,x)=>s+x[1],0);let v=r()*tot;for(const [k,wt] of w){if((v-=wt)<0)return k;}return w[w.length-1][0];};
+    let sales=[];
+    for(const year of [2024,2025]){
+      const n=year===2024?110:140;
+      for(let i=0;i<n;i++){
+        const p=pick(pw), prod=P[p-1], bike=prod.Category==='Bikes';
+        const q=bike?1+Math.floor(r()*2):1+Math.floor(r()*8);
+        const disc=r()<0.2?0.9:1;
+        sales.push({OrderID:0,Year:year,Month:1+Math.floor(r()*12),StoreID:pick(sw),ProductID:p,Quantity:q,UnitPrice:Math.round(prod.ListPrice*disc*100)/100});
+      }
+    }
+    sales.sort((a,b)=>a.Year-b.Year||a.Month-b.Month);
+    sales.forEach((s,i)=>s.OrderID=10001+i);
+    return {
+      Sales:{name:'Sales',cols:['OrderID','Year','Month','StoreID','ProductID','Quantity','UnitPrice'],rows:sales},
+      Products:{name:'Products',cols:['ProductID','Product','Category','ListPrice','UnitCost'],rows:P},
+      Stores:{name:'Stores',cols:['StoreID','Store','Region'],rows:S}
+    };
+  }
+
+  const DB=buildData();
+  const BASE_COLS={}; for(const t in DB) BASE_COLS[t]=DB[t].cols.slice();
+  const RELS=[{from:'Sales',fromCol:'ProductID',to:'Products',toCol:'ProductID'},{from:'Sales',fromCol:'StoreID',to:'Stores',toCol:'StoreID'}];
+  const RELIDX=RELS.map(r=>{const m=new Map();DB[r.to].rows.forEach((row,i)=>m.set(row[r.toCol],i));return m;});
+  let MEASURES=new Map();
+  let CALC=[];
+
+  // ---------- lookups ----------
+  function findTable(name){
+    for(const t in DB) if(t.toLowerCase()===String(name).toLowerCase()) return t;
+    throw new DaxError(`There's no table called '${name}'. The tables are: ${Object.keys(DB).join(', ')}.`);
+  }
+  function colIn(T,c){ for(const x of DB[T].cols) if(x.toLowerCase()===String(c).toLowerCase()) return x; return null; }
+  function findCol(T,c){
+    const x=colIn(T,c); if(x) return x;
+    throw new DaxError(`Table ${T} has no column [${c}]. Its columns are: ${DB[T].cols.join(', ')}.`);
+  }
+  function dimsOf(T){ const out=[]; for(const r of RELS) if(r.from===T){ out.push(r.to); out.push(...dimsOf(r.to)); } return out; }
+
+  // ---------- tokenizer ----------
+  function tokenize(src){
+    const t=[]; let i=0; const n=src.length;
+    while(i<n){
+      const c=src[i];
+      if(/\s/.test(c)){i++;continue;}
+      if((c==='/'&&src[i+1]==='/')||(c==='-'&&src[i+1]==='-')){while(i<n&&src[i]!=='\n')i++;continue;}
+      if(c==='/'&&src[i+1]==='*'){const j=src.indexOf('*/',i+2);i=j<0?n:j+2;continue;}
+      if(c==='['){const j=src.indexOf(']',i);if(j<0)throw new DaxError('A [ bracket is never closed with ].');t.push({type:'bracket',value:src.slice(i+1,j).trim(),raw:src.slice(i,j+1)});i=j+1;continue;}
+      if(c==="'"){const j=src.indexOf("'",i+1);if(j<0)throw new DaxError("A ' quote around a table name is never closed.");t.push({type:'ident',value:src.slice(i+1,j),quoted:true,raw:src.slice(i,j+1)});i=j+1;continue;}
+      if(c==='"'||c==='“'||c==='”'){
+        let j=i+1,s='';
+        while(true){ if(j>=n) throw new DaxError('A "text" value is missing its closing quote.');
+          const d=src[j]; if(d==='"'||d==='”'||d==='“'){ if(src[j+1]==='"'){s+='"';j+=2;continue;} break;} s+=d;j++; }
+        t.push({type:'str',value:s,raw:src.slice(i,j+1)});i=j+1;continue;
+      }
+      if(/[0-9]/.test(c)||(c==='.'&&/[0-9]/.test(src[i+1]||''))){let j=i;while(j<n&&/[0-9.]/.test(src[j]))j++;t.push({type:'num',value:parseFloat(src.slice(i,j)),raw:src.slice(i,j)});i=j;continue;}
+      if(/[A-Za-z_]/.test(c)){let j=i;while(j<n&&/[A-Za-z0-9_.]/.test(src[j]))j++;t.push({type:'ident',value:src.slice(i,j),raw:src.slice(i,j)});i=j;continue;}
+      const two=src.slice(i,i+2);
+      if(['<=','>=','<>','&&','||','=='].includes(two)){t.push({type:'op',value:two,raw:two});i+=2;continue;}
+      if('+-*/&=<>(),^'.includes(c)){t.push({type:'op',value:c,raw:c});i++;continue;}
+      if(c===';') throw new DaxError('DAX uses commas (,) between arguments, not semicolons (;).');
+      throw new DaxError(`Unexpected character "${c}".`);
+    }
+    return t;
+  }
+
+  // ---------- parser ----------
+  function parse(src){
+    if(!String(src).trim()) throw new DaxError('The formula is empty — type some DAX first.');
+    const toks=tokenize(src); let p=0; const scopes=[];
+    const peek=()=>toks[p], next=()=>toks[p++];
+    const isOp=v=>{const t=peek();return t&&t.type==='op'&&t.value===v;};
+    const where=()=>{const t=peek();return t?`near "${t.raw}"`:'at the end of the formula';};
+    const expectOp=v=>{if(!isOp(v)){ if(v===')') throw new DaxError(`A bracket is missing — expected ")" ${where()}.`); throw new DaxError(`Expected "${v}" ${where()}.`);} p++;};
+    const isKw=w=>{const t=peek();return t&&t.type==='ident'&&!t.quoted&&t.value.toUpperCase()===w;};
+    const inScope=nm=>scopes.some(s=>s.has(nm.toLowerCase()));
+    function parseExpr(){ return isKw('VAR')?parseVar():parseOr(); }
+    function parseVar(){
+      const vars=[], scope=new Set(); scopes.push(scope);
+      while(isKw('VAR')){ p++; const t=next();
+        if(!t||t.type!=='ident') throw new DaxError('Expected a variable name after VAR.');
+        if(!isOp('=')) throw new DaxError(`Expected "=" after VAR ${t.value}.`); p++;
+        const e=parseExpr(); vars.push({name:t.value,expr:e}); scope.add(t.value.toLowerCase()); }
+      if(!isKw('RETURN')) throw new DaxError(`Every VAR block needs a RETURN — expected RETURN ${where()}.`);
+      p++; const body=parseExpr(); scopes.pop(); return {k:'var',vars,body};
+    }
+    function bin(sub,ops){ return function(){ let l=sub(); while(peek()&&peek().type==='op'&&ops.includes(peek().value)){const op=next().value;const r=sub();l={k:'bin',op,l,r};} return l; }; }
+    function parseUnary(){ if(isOp('-')){p++;return {k:'neg',e:parseUnary()};} if(isOp('+')){p++;return parseUnary();} return parsePow(); }
+    function parsePow(){ let b=parsePrimary(); if(isOp('^')){p++; return {k:'bin',op:'^',l:b,r:parseUnary()};} return b; }
+    const parseMul=bin(parseUnary,['*','/']);
+    const parseAdd=bin(parseMul,['+','-']);
+    const parseCat=bin(parseAdd,['&']);
+    const parseCmp=bin(parseCat,['=','==','<>','<','>','<=','>=']);
+    const parseAnd=bin(parseCmp,['&&']);
+    const parseOr=bin(parseAnd,['||']);
+    function parsePrimary(){
+      const t=next();
+      if(!t) throw new DaxError('The formula ends too early — something is missing at the end.');
+      if(t.type==='num') return {k:'num',v:t.value};
+      if(t.type==='str') return {k:'str',v:t.value};
+      if(t.type==='bracket') return {k:'bracket',name:t.value};
+      if(t.type==='op'&&t.value==='('){const e=parseExpr();expectOp(')');return e;}
+      if(t.type==='ident'){
+        if(!t.quoted&&isOp('(')){
+          p++; const args=[];
+          if(!isOp(')')){ args.push(parseExpr()); while(isOp(',')){p++; args.push(parseExpr());} }
+          expectOp(')'); return {k:'call',fn:t.value.toUpperCase(),args};
+        }
+        if(peek()&&peek().type==='bracket'){const b=next();return {k:'col',table:t.value,col:b.value};}
+        if(!t.quoted&&inScope(t.value)) return {k:'varref',name:t.value};
+        if(!t.quoted&&/^(TRUE|FALSE)$/i.test(t.value)) return {k:'bool',v:/^TRUE$/i.test(t.value)};
+        return {k:'table',name:t.value};
+      }
+      throw new DaxError(`Unexpected "${t.raw}".`);
+    }
+    const ast=parseExpr();
+    if(p<toks.length) throw new DaxError(`Unexpected "${toks[p].raw}" — is an operator, comma or bracket missing?`);
+    return ast;
+  }
+
+  // ---------- filter engine ----------
+  function tableFiltered(T,f){ for(const x of f.values()) if(x.table===T) return true; for(const r of RELS) if(r.from===T&&tableFiltered(r.to,f)) return true; return false; }
+  function visibleRows(T,f){
+    const tbl=DB[T], fl=[]; for(const x of f.values()) if(x.table===T) fl.push(x);
+    const relF=[];
+    for(const r of RELS){ if(r.from!==T||!tableFiltered(r.to,f)) continue;
+      const keys=new Set(); for(const i of visibleRows(r.to,f)) keys.add(DB[r.to].rows[i][r.toCol]); relF.push({col:r.fromCol,keys}); }
+    const out=[];
+    outer: for(let i=0;i<tbl.rows.length;i++){ const row=tbl.rows[i];
+      for(const x of fl){ if(x.rows){ if(!x.rows.has(i)) continue outer; } else if(!x.values.has(row[x.col])) continue outer; }
+      for(const rf of relF) if(!rf.keys.has(row[rf.col])) continue outer;
+      out.push(i); }
+    return out;
+  }
+  function distinctOf(T,C,rows){ const s=new Set(); for(const i of rows) s.add(DB[T].rows[i][C]); return sortVals([...s]); }
+  function sortVals(a){ return a.sort((x,y)=>{ if(x==null) return 1; if(y==null) return -1; if(typeof x==='number'&&typeof y==='number') return x-y; return String(x).localeCompare(String(y)); }); }
+  function contextTransition(ctx){
+    const f=new Map(ctx.filters);
+    for(const r of ctx.rows){
+      if(r.rowIndex!=null){ for(const [k,x] of [...f]) if(x.table===r.table) f.delete(k); f.set(r.table+'|#rows',{table:r.table,rows:new Set([r.rowIndex])}); }
+      else for(const c in r.cols) f.set(r.table+'|'+c,{table:r.table,col:c,values:new Set([r.cols[c]])});
+    }
+    return f;
+  }
+
+  // ---------- helpers ----------
+  const isTable=v=>v&&typeof v==='object'&&v.kind;
+  function toN(v){ if(v==null) return 0; if(typeof v==='boolean') return v?1:0; if(typeof v==='number') return v;
+    if(isTable(v)) throw new DaxError('A table was used where a single number was expected. Wrap it in COUNTROWS(...) or an aggregation.');
+    const n=Number(v); if(v!==''&&!isNaN(n)) return n; throw new DaxError(`Can't do maths with the text "${v}".`); }
+  function truthy(v){ if(v==null) return false; if(typeof v==='boolean') return v; if(typeof v==='number') return v!==0;
+    if(isTable(v)) throw new DaxError('A table was used where TRUE/FALSE was expected.');
+    throw new DaxError(`The text "${v}" can't be used as TRUE/FALSE — compare it with something, e.g. Products[Category] = "${v}".`); }
+  function str(v){ if(v==null) return ''; if(typeof v==='boolean') return v?'TRUE':'FALSE'; return String(v); }
+  function norm(a,b){ if(a==null) a=(typeof b==='string')?'':(typeof b==='boolean'?false:0); return a; }
+  function eq(a,b){ a=norm(a,b); b=norm(b,a);
+    if(typeof a==='string'&&typeof b==='string') return a.toLowerCase()===b.toLowerCase();
+    if(typeof a==='boolean'||typeof b==='boolean') return toN(a)===toN(b);
+    if(typeof a==='string'||typeof b==='string') return String(a).toLowerCase()===String(b).toLowerCase();
+    return a===b; }
+  function cmp(a,b){ a=norm(a,b); b=norm(b,a);
+    if(typeof a==='string'||typeof b==='string'){ return String(a).toLowerCase().localeCompare(String(b).toLowerCase()); }
+    return toN(a)-toN(b); }
+
+  const TABLE_FNS=new Set(['FILTER','ALL','VALUES','DISTINCT','RELATEDTABLE','CALCULATETABLE','ALLEXCEPT','TOPN']);
+
+  // ---------- evaluator ----------
+  function ev(n,ctx){
+    switch(n.k){
+      case 'num': case 'str': case 'bool': return n.v;
+      case 'varref': return ctx.vars[n.name.toLowerCase()];
+      case 'var': { const vars=Object.assign({},ctx.vars); const c2=Object.assign({},ctx,{vars});
+        for(const v of n.vars) vars[v.name.toLowerCase()]=ev(v.expr,c2); return ev(n.body,c2); }
+      case 'col': { const T=findTable(n.table), C=findCol(T,n.col); return rowValue(ctx,T,C); }
+      case 'bracket': {
+        const m=MEASURES.get(n.name.toLowerCase()); if(m) return evalMeasure(m,ctx);
+        for(let i=ctx.rows.length-1;i>=0;i--){ const r=ctx.rows[i]; const C=colIn(r.table,n.name); if(C&&C in r.cols) return r.cols[C]; }
+        for(const t in DB){ const C=colIn(t,n.name); if(C) throw new DaxError(`[${n.name}] is a column, not a measure. Write it with its table name, e.g. ${t}[${C}], and aggregate it with SUM(${t}[${C}]) or similar.`); }
+        throw new DaxError(`There's no measure called [${n.name}]. Check the spelling, or create it first.`);
+      }
+      case 'table': { const T=findTable(n.name); return {kind:'table',table:T,rows:visibleRows(T,ctx.filters)}; }
+      case 'neg': { const v=ev(n.e,ctx); return v==null?null:-toN(v); }
+      case 'bin': return binop(n,ctx);
+      case 'call': return call(n,ctx);
+    }
+    throw new DaxError('Unrecognised expression.');
+  }
+  function rowValue(ctx,T,C){
+    for(let i=ctx.rows.length-1;i>=0;i--){ const r=ctx.rows[i]; if(r.table===T&&C in r.cols) return r.cols[C]; }
+    throw new DaxError(`${T}[${C}] needs a single row to read from, but there's no row here. In a measure, wrap it in an aggregation such as SUM(${T}[${C}]), or use an iterator like SUMX(${T}, ...).`);
+  }
+  function evalMeasure(m,ctx){
+    const d=(ctx.depth||0)+1; if(d>40) throw new DaxError(`Measure [${m.name}] seems to refer to itself (a circular reference).`);
+    const f=contextTransition(ctx);
+    return ev(m.ast,{filters:f,rows:[],vars:{},depth:d});
+  }
+  function binop(n,ctx){
+    const op=n.op, l=ev(n.l,ctx), r=ev(n.r,ctx);
+    switch(op){
+      case '+': if(l==null&&r==null) return null; return toN(l)+toN(r);
+      case '-': if(l==null&&r==null) return null; return toN(l)-toN(r);
+      case '*': if(l==null||r==null) return null; return toN(l)*toN(r);
+      case '/': { if(l==null&&r==null) return null; const a=toN(l), b=toN(r); return a/b; }
+      case '^': if(l==null) return null; return Math.pow(toN(l),toN(r));
+      case '&': return str(l)+str(r);
+      case '=': return eq(l,r);
+      case '==': if(l==null||r==null) return l==null&&r==null; return eq(l,r);
+      case '<>': return !eq(l,r);
+      case '<': return cmp(l,r)<0; case '>': return cmp(l,r)>0;
+      case '<=': return cmp(l,r)<=0; case '>=': return cmp(l,r)>=0;
+      case '&&': return truthy(l)&&truthy(r);
+      case '||': return truthy(l)||truthy(r);
+    }
+  }
+  function colArg(node,fn){
+    if(node&&node.k==='col'){ const T=findTable(node.table); return {T,C:findCol(T,node.col)}; }
+    if(node&&node.k==='bracket'){ for(const t in DB){ const C=colIn(t,node.name); if(C) throw new DaxError(`${fn} needs the table name with the column: write ${t}[${C}] instead of [${node.name}].`);} }
+    throw new DaxError(`${fn} needs a column here, written like Sales[Quantity].`);
+  }
+  function tableArg(node,ctx,fn){
+    const v=ev(node,ctx);
+    if(!isTable(v)) throw new DaxError(`${fn} needs a table as its first argument — for example Sales, or FILTER(Sales, ...).`);
+    return v;
+  }
+  function eachRow(tv,ctx,f){
+    if(tv.kind==='table'){ const T=tv.table; for(const i of tv.rows) f(Object.assign({},ctx,{rows:ctx.rows.concat([{table:T,rowIndex:i,cols:DB[T].rows[i]}])}),i); }
+    else for(const v of tv.values) f(Object.assign({},ctx,{rows:ctx.rows.concat([{table:tv.table,cols:{[tv.col]:v}}])}),v);
+  }
+  function tableLen(tv){ return tv.kind==='table'?tv.rows.length:tv.values.length; }
+  function targetOf(node){
+    if(node.k==='table') return {table:findTable(node.name)};
+    if(node.k==='col'){ const T=findTable(node.table); return {table:T,col:findCol(T,node.col)}; }
+    throw new DaxError('ALL() / REMOVEFILTERS() need a table (e.g. Sales) or a column (e.g. Products[Category]).');
+  }
+  const SCALAR_PASS=new Set(['IF','AND','OR','NOT','ABS','ROUND','INT','ISBLANK','UPPER','LOWER','LEN','LEFT','RIGHT']);
+  function colsInPredicate(n,acc){
+    if(!n||typeof n!=='object') return acc;
+    if(n.k==='col'){ const T=findTable(n.table); acc.set(T+'|'+findCol(T,n.col),{T,C:findCol(T,n.col)}); return acc; }
+    if(n.k==='call'&&!SCALAR_PASS.has(n.fn)) return acc;
+    if(n.k==='bin'){ colsInPredicate(n.l,acc); colsInPredicate(n.r,acc); }
+    if(n.k==='neg') colsInPredicate(n.e,acc);
+    if(n.k==='call') n.args.forEach(a=>colsInPredicate(a,acc));
+    return acc;
+  }
+  function boolFilter(e,ctx){
+    const cols=[...colsInPredicate(e,new Map()).values()];
+    if(cols.length===0) throw new DaxError('Each CALCULATE filter must test a column, e.g. Products[Category] = "Bikes".');
+    if(cols.length>1) throw new DaxError(`A simple CALCULATE filter can only test one column, but this one uses ${cols.map(c=>c.T+'['+c.C+']').join(' and ')}. Use FILTER(${cols[0].T}, ...) to test several columns row by row.`);
+    const {T,C}=cols[0]; const vals=new Set();
+    for(const v of distinctOf(T,C,DB[T].rows.map((_,i)=>i))){
+      const c2=Object.assign({},ctx,{rows:ctx.rows.concat([{table:T,cols:{[C]:v}}])});
+      if(truthy(ev(e,c2))) vals.add(v);
+    }
+    return {table:T,col:C,values:vals};
+  }
+  let keepN=0;
+  function calcFilters(args,ctx){
+    const removals=[], sets=[];
+    for(const a of args){
+      if(a.k==='call'&&(a.fn==='ALL'||a.fn==='REMOVEFILTERS')){ if(!a.args.length) removals.push({all:true}); else a.args.forEach(t=>removals.push(targetOf(t))); continue; }
+      if(a.k==='call'&&a.fn==='ALLEXCEPT'){ const T=findTable(a.args[0].name||a.args[0].table); const keep=a.args.slice(1).map(x=>colArg(x,'ALLEXCEPT')); removals.push({table:T,except:keep}); continue; }
+      let keep=false,e=a;
+      if(a.k==='call'&&a.fn==='KEEPFILTERS'){ keep=true; e=a.args[0]; }
+      let tv=null;
+      if(e.k==='table'||(e.k==='call'&&TABLE_FNS.has(e.fn))) tv=ev(e,ctx);
+      else if(e.k==='varref'){ const v=ctx.vars[e.name.toLowerCase()]; if(isTable(v)) tv=v; }
+      if(tv) sets.push({keep,tv}); else sets.push({keep,bf:boolFilter(e,ctx)});
+    }
+    const f=contextTransition(ctx);
+    for(const r of removals){
+      if(r.all){ f.clear(); continue; }
+      if(r.except){ const tabs=[r.table,...dimsOf(r.table)]; const ex=new Set(r.except.map(x=>x.T+'|'+x.C)); for(const [k,x] of [...f]) if(tabs.includes(x.table)&&!ex.has(k)) f.delete(k); continue; }
+      if(r.col){ f.delete(r.table+'|'+r.col); continue; }
+      const tabs=[r.table,...dimsOf(r.table)]; for(const [k,x] of [...f]) if(tabs.includes(x.table)) f.delete(k);
+    }
+    for(const s of sets){
+      if(s.bf){ const key=s.bf.table+'|'+s.bf.col+(s.keep?'|k'+(++keepN):''); f.set(key,{table:s.bf.table,col:s.bf.col,values:s.bf.values}); continue; }
+      const tv=s.tv;
+      if(tv.kind==='table'){ if(!s.keep) for(const [k,x] of [...f]) if(x.table===tv.table) f.delete(k);
+        f.set(tv.table+'|#rows'+(s.keep?'|k'+(++keepN):''),{table:tv.table,rows:new Set(tv.rows)}); }
+      else f.set(tv.table+'|'+tv.col+(s.keep?'|k'+(++keepN):''),{table:tv.table,col:tv.col,values:new Set(tv.values)});
+    }
+    return f;
+  }
+  function fmtNum(v,fmt){
+    if(v==null) return ''; const n=toN(v); fmt=String(fmt);
+    const pct=fmt.includes('%'); const m=fmt.match(/\.([0#]+)/); const dp=m?m[1].length:0;
+    const pre=(fmt.match(/^[^#0.,%]*/)||[''])[0].replace(/"/g,'');
+    const x=pct?n*100:n;
+    let s=fmt.includes(',')?x.toLocaleString('en-GB',{minimumFractionDigits:dp,maximumFractionDigits:dp}):x.toFixed(dp);
+    return pre+s+(pct?'%':'');
+  }
+  function need(n,min,max){ if(n.args.length<min||n.args.length>max){ const want=min===max?`${min}`:(max===Infinity?`at least ${min}`:`${min} to ${max}`); throw new DaxError(`${n.fn} expects ${want} argument${want==='1'?'':'s'}, but got ${n.args.length}.`);} }
+  function call(n,ctx){
+    const A=n.args, fn=n.fn, E=x=>ev(x,ctx);
+    switch(fn){
+      case 'SUM': case 'AVERAGE': case 'COUNT': case 'COUNTA': case 'DISTINCTCOUNT': case 'COUNTBLANK': case 'MIN': case 'MAX': {
+        if((fn==='MIN'||fn==='MAX')&&A.length===2){ const a=E(A[0]), b=E(A[1]); if(a==null) return b; if(b==null) return a; return fn==='MIN'?(cmp(a,b)<=0?a:b):(cmp(a,b)>=0?a:b); }
+        need(n,1,1); const {T,C}=colArg(A[0],fn); const vals=visibleRows(T,ctx.filters).map(i=>DB[T].rows[i][C]);
+        const nn=vals.filter(v=>v!=null&&v!=='');
+        if(fn==='COUNTBLANK'){ const c=vals.length-nn.length; return c||null; }
+        if(fn==='COUNTA') return nn.length||null;
+        if(fn==='DISTINCTCOUNT') return new Set(vals).size||null;
+        const nums=nn.filter(v=>typeof v==='number');
+        if((fn==='SUM'||fn==='AVERAGE')&&nn.length&&!nums.length) throw new DaxError(`${fn} can't add up text — ${T}[${C}] contains text. Try COUNTA or DISTINCTCOUNT instead.`);
+        if(fn==='COUNT') return nums.length||null;
+        if(!nn.length) return null;
+        if(fn==='SUM') return nums.reduce((s,x)=>s+x,0);
+        if(fn==='AVERAGE') return nums.reduce((s,x)=>s+x,0)/nums.length;
+        const sorted=sortVals(nn.slice()); return fn==='MIN'?sorted[0]:sorted[sorted.length-1];
+      }
+      case 'COUNTROWS': { need(n,1,1); const tv=tableArg(A[0],ctx,fn); return tableLen(tv)||null; }
+      case 'SUMX': case 'AVERAGEX': case 'MINX': case 'MAXX': case 'COUNTX': {
+        need(n,2,2); const tv=tableArg(A[0],ctx,fn); const out=[];
+        eachRow(tv,ctx,c=>{ const v=ev(A[1],c); if(isTable(v)) throw new DaxError(`The second argument of ${fn} must give one value per row, not a table.`); if(v!=null&&v!=='') out.push(v); });
+        if(fn==='COUNTX') return out.length||null;
+        if(!out.length) return null;
+        if(fn==='SUMX') return out.reduce((s,x)=>s+toN(x),0);
+        if(fn==='AVERAGEX') return out.reduce((s,x)=>s+toN(x),0)/out.length;
+        const s=sortVals(out.slice()); return fn==='MINX'?s[0]:s[s.length-1];
+      }
+      case 'CONCATENATEX': {
+        need(n,2,3); const tv=tableArg(A[0],ctx,fn); const out=[]; eachRow(tv,ctx,c=>{const v=ev(A[1],c); if(v!=null) out.push(str(v));});
+        return out.join(A[2]?str(E(A[2])):'');
+      }
+      case 'FILTER': {
+        need(n,2,2); const tv=tableArg(A[0],ctx,fn); const keep=[];
+        eachRow(tv,ctx,(c,key)=>{ if(truthy(ev(A[1],c))) keep.push(key); });
+        return tv.kind==='table'?{kind:'table',table:tv.table,rows:keep}:{kind:'coltable',table:tv.table,col:tv.col,values:keep};
+      }
+      case 'ALL': case 'REMOVEFILTERS': {
+        need(n,1,1); const t=targetOf(A[0]);
+        if(t.col) return {kind:'coltable',table:t.table,col:t.col,values:distinctOf(t.table,t.col,DB[t.table].rows.map((_,i)=>i))};
+        return {kind:'table',table:t.table,rows:DB[t.table].rows.map((_,i)=>i)};
+      }
+      case 'ALLEXCEPT': throw new DaxError('In this lab, ALLEXCEPT can only be used as a filter inside CALCULATE.');
+      case 'VALUES': case 'DISTINCT': {
+        need(n,1,1);
+        if(A[0].k==='table'){ const T=findTable(A[0].name); return {kind:'table',table:T,rows:visibleRows(T,ctx.filters)}; }
+        const {T,C}=colArg(A[0],fn); return {kind:'coltable',table:T,col:C,values:distinctOf(T,C,visibleRows(T,ctx.filters))};
+      }
+      case 'SELECTEDVALUE': { need(n,1,2); const {T,C}=colArg(A[0],fn); const v=distinctOf(T,C,visibleRows(T,ctx.filters)); return v.length===1?v[0]:(A[1]?E(A[1]):null); }
+      case 'HASONEVALUE': { need(n,1,1); const {T,C}=colArg(A[0],fn); return distinctOf(T,C,visibleRows(T,ctx.filters)).length===1; }
+      case 'ISFILTERED': { need(n,1,1);
+        if(A[0].k==='table'){ const T=findTable(A[0].name); return [...ctx.filters.values()].some(x=>x.table===T); }
+        const {T,C}=colArg(A[0],fn); return ctx.filters.has(T+'|'+C); }
+      case 'CALCULATE': {
+        need(n,1,Infinity); const f=calcFilters(A.slice(1),ctx);
+        const v=ev(A[0],{filters:f,rows:[],vars:ctx.vars,depth:ctx.depth});
+        if(isTable(v)) throw new DaxError('CALCULATE must return a single value. Use CALCULATETABLE when you want a table back.');
+        return v;
+      }
+      case 'CALCULATETABLE': {
+        need(n,1,Infinity); const f=calcFilters(A.slice(1),ctx);
+        return tableArg(A[0],{filters:f,rows:[],vars:ctx.vars,depth:ctx.depth},fn);
+      }
+      case 'RELATED': {
+        need(n,1,1); const {T,C}=colArg(A[0],fn);
+        for(let i=ctx.rows.length-1;i>=0;i--){ const r=ctx.rows[i];
+          const ri=RELS.findIndex(x=>x.from===r.table&&x.to===T);
+          if(ri>=0&&RELS[ri].fromCol in r.cols){ const j=RELIDX[ri].get(r.cols[RELS[ri].fromCol]); return j==null?null:DB[T].rows[j][C]; } }
+        throw new DaxError(`RELATED(${T}[${C}]) needs a row of a table that links to ${T} — use it inside an iterator like SUMX(Sales, ...) or in a calculated column on Sales.`);
+      }
+      case 'RELATEDTABLE': { need(n,1,1); if(A[0].k!=='table') throw new DaxError('RELATEDTABLE needs a table name, e.g. RELATEDTABLE(Sales).'); const T=findTable(A[0].name); return {kind:'table',table:T,rows:visibleRows(T,contextTransition(ctx))}; }
+      case 'DIVIDE': { need(n,2,3); const a=E(A[0]), b=E(A[1]); if(b==null||toN(b)===0) return A[2]?E(A[2]):null; if(a==null) return null; return toN(a)/toN(b); }
+      case 'IF': { need(n,2,3); return truthy(E(A[0]))?E(A[1]):(A[2]?E(A[2]):null); }
+      case 'SWITCH': { need(n,3,Infinity); const v=E(A[0]); let i=1; for(;i+1<A.length;i+=2){ const w=E(A[i]); if(typeof v==='boolean'?truthy(w)===v:eq(v,w)) return E(A[i+1]); } return i<A.length?E(A[i]):null; }
+      case 'AND': need(n,2,2); return truthy(E(A[0]))&&truthy(E(A[1]));
+      case 'OR': need(n,2,2); return truthy(E(A[0]))||truthy(E(A[1]));
+      case 'NOT': need(n,1,1); return !truthy(E(A[0]));
+      case 'TRUE': need(n,0,0); return true;
+      case 'FALSE': need(n,0,0); return false;
+      case 'BLANK': need(n,0,0); return null;
+      case 'ISBLANK': { need(n,1,1); const v=E(A[0]); return v==null; }
+      case 'COALESCE': { need(n,2,Infinity); for(const a of A){ const v=E(a); if(v!=null) return v; } return null; }
+      case 'ROUND': { need(n,1,2); const v=E(A[0]); if(v==null) return null; const d=A[1]?toN(E(A[1])):0; const k=Math.pow(10,d); return Math.round(toN(v)*k)/k; }
+      case 'INT': { need(n,1,1); const v=E(A[0]); return v==null?null:Math.floor(toN(v)); }
+      case 'ABS': { need(n,1,1); const v=E(A[0]); return v==null?null:Math.abs(toN(v)); }
+      case 'SQRT': { need(n,1,1); const v=E(A[0]); return v==null?null:Math.sqrt(toN(v)); }
+      case 'RANKX': {
+        need(n,2,5); const tv=tableArg(A[0],ctx,fn); const vals=[];
+        eachRow(tv,ctx,c=>vals.push(ev(A[1],c)));
+        const cur=A[2]?E(A[2]):E(A[1]); if(cur==null) return null;
+        const asc=A[3]&&((A[3].k==='table'&&/^ASC$/i.test(A[3].name))||(A[3].k==='num'&&A[3].v===1));
+        let rank=1; for(const v of vals){ if(v==null) continue; if(asc?cmp(v,cur)<0:cmp(v,cur)>0) rank++; } return rank;
+      }
+      case 'FORMAT': { need(n,2,2); return fmtNum(E(A[0]),str(E(A[1]))); }
+      case 'UPPER': need(n,1,1); return str(E(A[0])).toUpperCase();
+      case 'LOWER': need(n,1,1); return str(E(A[0])).toLowerCase();
+      case 'LEN': need(n,1,1); return str(E(A[0])).length;
+      case 'LEFT': need(n,1,2); return str(E(A[0])).slice(0,A[1]?toN(E(A[1])):1);
+      case 'RIGHT': { need(n,1,2); const s=str(E(A[0])); const k=A[1]?toN(E(A[1])):1; return s.slice(Math.max(0,s.length-k)); }
+      case 'CONCATENATE': need(n,2,2); return str(E(A[0]))+str(E(A[1]));
+      case 'TOTALYTD': case 'SAMEPERIODLASTYEAR': case 'DATEADD': case 'DATESYTD': case 'PREVIOUSYEAR': case 'PARALLELPERIOD':
+        throw new DaxError(`${fn} is a time-intelligence function and needs a proper Date table, which this practice model doesn't have. Lesson 14 shows how to compare years using Sales[Year] instead.`);
+      case 'ASC': case 'DESC': throw new DaxError(`${fn} is written without brackets, e.g. RANKX(ALL(Products[Category]), [Total Sales], , DESC).`);
+    }
+    throw new DaxError(`Unknown function ${fn}(). Check the spelling, or see the Cheat sheet for the functions this lab supports.`);
+  }
+
+  // ---------- public API ----------
+  function makeFilters(list){ const f=new Map(); for(const x of (list||[])) f.set(x.table+'|'+x.col,{table:x.table,col:x.col,values:new Set([x.value])}); return f; }
+  function evalAst(ast,filterList){
+    const v=ev(ast,{filters:makeFilters(filterList),rows:[],vars:{},depth:0});
+    if(isTable(v)) throw new DaxError('This formula returns a table, but a measure must return a single value. Wrap it in something like COUNTROWS(...) or SUMX(...).');
+    return v;
+  }
+  function computeColumn(T,ast){
+    T=findTable(T);
+    return DB[T].rows.map((row,i)=>{ const v=ev(ast,{filters:new Map(),rows:[{table:T,rowIndex:i,cols:row}],vars:{},depth:0});
+      if(isTable(v)) throw new DaxError('A calculated column must give one value per row, not a table.'); return v; });
+  }
+  function validName(name){ name=String(name||'').trim(); if(!name) throw new DaxError('Give it a name first.'); if(/[\[\]]/.test(name)) throw new DaxError('Names can\'t contain [ or ].'); return name; }
+  function addMeasure(name,expr){
+    name=validName(name);
+    for(const t in DB) if(colIn(t,name)) throw new DaxError(`"${name}" is already a column name in ${t}. Pick a different measure name.`);
+    const ast=parse(expr); const key=name.toLowerCase(); const old=MEASURES.get(key);
+    MEASURES.set(key,{name,expr,ast});
+    try{ evalAst(ast,[]); }catch(e){ if(old) MEASURES.set(key,old); else MEASURES.delete(key); throw e; }
+    return MEASURES.get(key);
+  }
+  function removeMeasure(name){ MEASURES.delete(String(name).toLowerCase()); }
+  function addCalcColumn(T,name,expr){
+    T=findTable(T); name=validName(name);
+    if(BASE_COLS[T].some(c=>c.toLowerCase()===name.toLowerCase())) throw new DaxError(`${T} already has a column called ${name}.`);
+    if(MEASURES.has(name.toLowerCase())) throw new DaxError(`There's already a measure called [${name}]. Pick a different column name.`);
+    const ast=parse(expr);
+    const existing=CALC.find(c=>c.table===T&&c.name.toLowerCase()===name.toLowerCase());
+    if(existing){ const backup=DB[T].rows.map(r=>r[existing.name]); DB[T].rows.forEach(r=>delete r[existing.name]); DB[T].cols=DB[T].cols.filter(c=>c!==existing.name);
+      try{ const vals=computeColumn(T,ast); existing.expr=expr; existing.ast=ast; existing.name=name; DB[T].cols.push(name); DB[T].rows.forEach((r,i)=>r[name]=vals[i]); }
+      catch(e){ DB[T].cols.push(existing.name); DB[T].rows.forEach((r,i)=>r[existing.name]=backup[i]); throw e; }
+      return existing; }
+    const vals=computeColumn(T,ast);
+    DB[T].cols.push(name); DB[T].rows.forEach((r,i)=>r[name]=vals[i]);
+    const c={table:T,name,expr,ast}; CALC.push(c); return c;
+  }
+  function removeCalcColumn(T,name){ const c=CALC.find(x=>x.table===T&&x.name===name); if(!c) return; CALC=CALC.filter(x=>x!==c); DB[T].cols=DB[T].cols.filter(x=>x!==name); DB[T].rows.forEach(r=>delete r[name]); }
+  function reset(){ MEASURES=new Map(); for(const c of CALC.slice()) removeCalcColumn(c.table,c.name); CALC=[]; }
+  function distinct(T,C){ return distinctOf(T,C,DB[T].rows.map((_,i)=>i)); }
+
+  return {DaxError,parse,evalAst,computeColumn,addMeasure,removeMeasure,addCalcColumn,removeCalcColumn,reset,distinct,
+    DB,RELS,BASE_COLS,measures:()=>[...MEASURES.values()],calcCols:()=>CALC.slice(),hasMeasure:n=>MEASURES.has(String(n).toLowerCase()),
+    getMeasure:n=>MEASURES.get(String(n).toLowerCase())};
+})();
+/*ENGINE END*/
+
+
+</script>
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const DB=DAX.DB;
+
+// ---------- formatting ----------
+function isPct(name){ return /%|margin|pct|percent|share/i.test(name||''); }
+function fmt(v,name){
+  if(v===null||v===undefined) return '<span class="blank">(blank)</span>';
+  if(typeof v==='boolean') return v?'TRUE':'FALSE';
+  if(typeof v==='string') return esc(v);
+  if(!isFinite(v)) return isNaN(v)?'NaN':(v>0?'∞':'-∞')+' <span class="small">(divide by zero — try DIVIDE)</span>';
+  if(isPct(name)) return (v*100).toLocaleString('en-GB',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+  if(Number.isInteger(v)) return v.toLocaleString('en-GB');
+  return v.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function fmtCell(v){ if(v==null) return '<span class="blank">(blank)</span>'; if(typeof v==='number'&&!Number.isInteger(v)) return v.toLocaleString('en-GB',{maximumFractionDigits:2}); return esc(v); }
+function allCols(){ const out=[]; for(const t in DB) for(const c of DB[t].cols) out.push({t,c,key:t+'['+c+']'}); return out; }
+function parseKey(k){ const m=/^(\w+)\[(.+)\]$/.exec(k); return m?{table:m[1],col:m[2]}:null; }
+
+// ---------- lessons ----------
+const DEF_CHECK=['Products[Category]','Stores[Region]','Sales[Year]'];
+const L=[
+ {part:'Getting started',id:'l1',title:'Your first measure',kind:'m',name:'Total Quantity',solution:'SUM(Sales[Quantity])',preview:'Products[Category]',
+  concept:`<p>A <b>measure</b> is a formula that summarises data — a total, a count, an average. You write it once, and Power BI recalculates it for every cell of a visual.</p><p>Columns are always written as <code>Table[Column]</code>. To add a column up, use <code>SUM</code>:</p><pre>SUM(Sales[Quantity])</pre>`,
+  task:`Create a measure called <b>Total Quantity</b> that adds up the <code>Quantity</code> column in the <code>Sales</code> table.`,
+  hint:`Use SUM( ) with the column Sales[Quantity] inside the brackets.`,
+  after:`Look at the result below: one formula, but a different answer for each category. That's because each row of the matrix applies a different <b>filter</b>. This idea — the <b>filter context</b> — is the heart of DAX.`},
+ {part:'Getting started',id:'l2',title:'Calculated columns',kind:'c',table:'Sales',name:'Line Total',solution:'Sales[Quantity] * Sales[UnitPrice]',
+  concept:`<p>A <b>calculated column</b> adds a new column to a table. The formula is worked out <b>once for every row</b>, so it can read the other values on that same row. This is called <b>row context</b>.</p><pre>Sales[Quantity] * Sales[UnitPrice]</pre><p>Use columns for values you want to see per row, or to slice by. Use measures for totals.</p>`,
+  task:`Add a calculated column to <b>Sales</b> called <b>Line Total</b> that multiplies <code>Quantity</code> by <code>UnitPrice</code>.`,
+  hint:`Use the * operator between Sales[Quantity] and Sales[UnitPrice].`,
+  after:`Your new column now appears in the Sales table (see the Data model tab). Try typing <code>Sales[Quantity] * Sales[UnitPrice]</code> as a <i>measure</i> in the Playground — you'll get an error, because a measure has no single row to read from.`},
+ {part:'Getting started',id:'l3',title:'Adding up your new column',kind:'m',name:'Total Sales',solution:'SUM(Sales[Line Total])',needs:['c:Line Total'],preview:'Stores[Region]',
+  concept:`<p>Now that every row has a <code>Line Total</code>, a measure can add them up — exactly like Lesson 1. Column names can contain spaces: <code>Sales[Line Total]</code>.</p>`,
+  task:`Create a measure called <b>Total Sales</b> that sums <code>Sales[Line Total]</code>.`,
+  hint:`SUM(Sales[Line Total])`,
+  after:`<b>Total Sales</b> will be the building block for most of the later lessons.`},
+ {part:'Getting started',id:'l4',title:'Iterators: SUMX',kind:'m',name:'Total Sales X',solution:'SUMX(Sales, Sales[Quantity] * Sales[UnitPrice])',preview:'Products[Category]',
+  concept:`<p>Functions ending in <b>X</b> — <code>SUMX</code>, <code>AVERAGEX</code>, <code>MAXX</code> — are <b>iterators</b>. They go through a table one row at a time, work out an expression for each row (row context again), then aggregate the results.</p><pre>SUMX( &lt;table&gt;, &lt;expression for each row&gt; )</pre><p>This gives you a line-level calculation <i>without</i> storing an extra column.</p>`,
+  task:`Create <b>Total Sales X</b> using <code>SUMX</code> over the <code>Sales</code> table, multiplying <code>Quantity</code> by <code>UnitPrice</code> for each row.`,
+  hint:`SUMX(Sales, ... ) — the second argument is the same formula you used for the calculated column.`,
+  after:`Same numbers as Total Sales — two routes to the same answer. In real models, SUMX is often preferred because it keeps the model smaller.`},
+ {part:'Core measures',id:'l5',title:'Counting rows',kind:'m',name:'Order Count',solution:'COUNTROWS(Sales)',preview:'Stores[Region]',
+  concept:`<p><code>COUNTROWS(Table)</code> counts how many rows are visible in the current filter context. Here, each Sales row is one order line.</p><p>Related: <code>DISTINCTCOUNT(Sales[ProductID])</code> counts unique values, and <code>COUNT</code> counts non-blank numbers in a column.</p>`,
+  task:`Create a measure called <b>Order Count</b> that counts the rows in <code>Sales</code>.`,
+  hint:`COUNTROWS takes a table, not a column — just the word Sales.`,
+  after:`Try <code>DISTINCTCOUNT(Sales[ProductID])</code> in the Playground to see how many different products each region sold.`},
+ {part:'Core measures',id:'l6',title:'Safe division with DIVIDE',kind:'m',name:'Avg Order Value',solution:'DIVIDE([Total Sales], [Order Count])',needs:['m:Total Sales','m:Order Count'],preview:'Products[Category]',
+  concept:`<p>Measures can use other measures — just put the measure name in square brackets: <code>[Total Sales]</code>.</p><p>You could divide with <code>/</code>, but if the bottom number is zero you get an error (∞). <code>DIVIDE(top, bottom)</code> returns a blank instead — much tidier in a report.</p>`,
+  task:`Create <b>Avg Order Value</b> that divides <code>[Total Sales]</code> by <code>[Order Count]</code> using <code>DIVIDE</code>.`,
+  hint:`DIVIDE( [Total Sales], [Order Count] )`,
+  after:`Building measures from other measures keeps formulas short and means you only define the business logic once.`},
+ {part:'Core measures',id:'l7',title:'Crossing relationships: RELATED',kind:'m',name:'Total Cost',solution:'SUMX(Sales, Sales[Quantity] * RELATED(Products[UnitCost]))',preview:'Products[Category]',
+  concept:`<p>The unit cost lives in the <b>Products</b> table, not Sales. Inside a row context on Sales, <code>RELATED(Products[UnitCost])</code> follows the relationship and fetches the cost for that row's product.</p><pre>SUMX(Sales, Sales[Quantity] * RELATED(Products[UnitCost]))</pre>`,
+  task:`Create <b>Total Cost</b>: for every Sales row, multiply <code>Quantity</code> by the related product's <code>UnitCost</code>, and add it all up.`,
+  hint:`Start with SUMX(Sales, ...) and use RELATED(Products[UnitCost]) inside.`,
+  after:`RELATED only works where there's a row context — inside an iterator or a calculated column.`},
+ {part:'Core measures',id:'l8',title:'Variables: VAR … RETURN',kind:'m',name:'Profit Margin',solution:'VAR SalesAmt = [Total Sales]\nVAR Cost = [Total Cost]\nRETURN DIVIDE(SalesAmt - Cost, SalesAmt)',needs:['m:Total Sales','m:Total Cost'],preview:'Products[Category]',
+  concept:`<p><b>Variables</b> let you name a step, then use it later. They make long formulas readable, and each one is calculated only once.</p><pre>VAR SalesAmt = [Total Sales]
+VAR Cost = [Total Cost]
+RETURN DIVIDE(SalesAmt - Cost, SalesAmt)</pre><p>Every <code>VAR</code> block must finish with <code>RETURN</code>.</p>`,
+  task:`Create <b>Profit Margin</b> = (Total Sales − Total Cost) ÷ Total Sales, using at least one variable.`,
+  hint:`VAR SalesAmt = [Total Sales]  then  VAR Cost = [Total Cost]  then  RETURN DIVIDE(...).`,
+  after:`Measure names containing "Margin" or "%" are shown as percentages in this lab.`},
+ {part:'Filter context',id:'l9',title:'CALCULATE: changing the filters',kind:'m',name:'Bike Sales',solution:'CALCULATE([Total Sales], Products[Category] = "Bikes")',needs:['m:Total Sales'],preview:'Products[Category]',
+  concept:`<p><code>CALCULATE</code> is the most important function in DAX. It works out an expression <b>after changing the filter context</b>.</p><pre>CALCULATE( &lt;expression&gt;, &lt;filter&gt;, &lt;filter&gt; ... )</pre><p>Text values go in double quotes: <code>Products[Category] = "Bikes"</code>.</p>`,
+  task:`Create <b>Bike Sales</b>: Total Sales, but only for the <code>Bikes</code> category.`,
+  hint:`CALCULATE([Total Sales], Products[Category] = "Bikes")`,
+  after:`Look closely: on the Accessories and Clothing rows it still shows the bike figure. CALCULATE <b>replaced</b> the category filter from the matrix with its own. (To keep both, wrap the filter in <code>KEEPFILTERS( )</code> — try it in the Playground.)`},
+ {part:'Filter context',id:'l10',title:'Removing filters with ALL',kind:'m',name:'% of All Sales',solution:'DIVIDE([Total Sales], CALCULATE([Total Sales], ALL(Sales)))',needs:['m:Total Sales'],preview:'Stores[Region]',
+  concept:`<p><code>ALL(Table)</code> or <code>ALL(Table[Column])</code> inside CALCULATE <b>removes</b> filters. That gives you a grand total you can compare against.</p><pre>CALCULATE([Total Sales], ALL(Sales))</pre><p>Divide the current value by that grand total and you have a "% of total" measure.</p>`,
+  task:`Create <b>% of All Sales</b>: Total Sales divided by Total Sales with all filters removed from <code>Sales</code>.`,
+  hint:`DIVIDE([Total Sales], CALCULATE([Total Sales], ALL(Sales)))`,
+  after:`Try <code>ALL(Products)</code> instead in the Playground and put Stores[Region] on rows and Products[Category] on columns. What changes?`},
+ {part:'Filter context',id:'l11',title:'FILTER for row-by-row tests',kind:'m',name:'Large Line Sales',solution:'CALCULATE([Total Sales], FILTER(Sales, Sales[Quantity] * Sales[UnitPrice] > 500))',needs:['m:Total Sales'],preview:'Products[Category]',
+  concept:`<p>A simple filter like <code>Products[Category] = "Bikes"</code> can only test <b>one column</b>. When you need a test that combines columns, use <code>FILTER</code>, which checks each row:</p><pre>FILTER( Sales, Sales[Quantity] * Sales[UnitPrice] &gt; 500 )</pre><p>FILTER returns a table of the rows that pass, which CALCULATE then uses as its filter.</p>`,
+  task:`Create <b>Large Line Sales</b>: Total Sales, but only from Sales rows where <code>Quantity × UnitPrice</code> is more than <b>500</b>.`,
+  hint:`CALCULATE([Total Sales], FILTER(Sales, ... > 500))`,
+  after:`Clothing shows (blank) — no single clothing order line was worth more than £500.`},
+ {part:'Logic & ranking',id:'l12',title:'IF: labelling results',kind:'m',name:'Store Band',solution:'IF([Total Sales] >= 15000, "High", "Low")',needs:['m:Total Sales'],preview:'Stores[Store]',check:['Stores[Store]','Stores[Region]'],
+  concept:`<p><code>IF(test, value if true, value if false)</code> lets a measure return different results. A measure can return text as well as numbers.</p><p>For more than two outcomes, <code>SWITCH(TRUE(), test1, result1, test2, result2, otherwise)</code> is neater than nested IFs.</p>`,
+  task:`Create <b>Store Band</b> that returns <code>"High"</code> when Total Sales is <b>15,000 or more</b>, otherwise <code>"Low"</code>.`,
+  hint:`IF([Total Sales] >= 15000, "High", "Low")`,
+  after:`Challenge: rewrite it with SWITCH(TRUE(), ...) to add a "Medium" band for 10,000–15,000.`},
+ {part:'Logic & ranking',id:'l13',title:'Ranking with RANKX',kind:'m',name:'Category Rank',solution:'RANKX(ALL(Products[Category]), [Total Sales])',needs:['m:Total Sales'],preview:'Products[Category]',check:['Products[Category]'],
+  concept:`<p><code>RANKX(table, expression)</code> works out the expression for every row of the table, then ranks the current value against that list (highest = 1).</p><p>Use <code>ALL(...)</code> for the table so every category is compared — otherwise each row would only see itself and always rank 1.</p>`,
+  task:`Create <b>Category Rank</b> that ranks each category by <code>[Total Sales]</code>.`,
+  hint:`RANKX(ALL(Products[Category]), [Total Sales])`,
+  after:`Try <code>RANKX(Products, [Total Sales])</code> with Products[Product] on the matrix rows to rank individual products.`},
+ {part:'Logic & ranking',id:'l14',title:'Comparing with last year',kind:'m',name:'Sales Last Year',solution:'VAR ThisYear = SELECTEDVALUE(Sales[Year])\nRETURN CALCULATE([Total Sales], Sales[Year] = ThisYear - 1)',needs:['m:Total Sales'],preview:'Sales[Year]',check:['Sales[Year]','Products[Category]'],
+  concept:`<p><code>SELECTEDVALUE(Column)</code> returns the value of a column when exactly one value is in the filter context (for example, the year on the current matrix row).</p><p>Store it in a variable, then use CALCULATE to switch the filter to the year before.</p><pre>VAR ThisYear = SELECTEDVALUE(Sales[Year])
+RETURN CALCULATE([Total Sales], Sales[Year] = ThisYear - 1)</pre><p>Real models usually use a Date table with functions like <code>SAMEPERIODLASTYEAR</code>; the idea is the same.</p>`,
+  task:`Create <b>Sales Last Year</b> that shows the previous year's Total Sales on each year row.`,
+  hint:`Use VAR ThisYear = SELECTEDVALUE(Sales[Year]) and then CALCULATE with Sales[Year] = ThisYear - 1.`,
+  after:`2024 is blank (there's no 2023 data) and the total row is blank because no single year is selected. Try building <b>Sales Growth %</b> = DIVIDE([Total Sales] - [Sales Last Year], [Sales Last Year]) in the Playground.`}
+];
+const PROVIDES={}; L.forEach(l=>PROVIDES[(l.kind==='c'?'c:':'m:')+l.name]=l);
+
+// ---------- state ----------
+let S={done:[],cur:0,measures:[],cols:[],drafts:{},mx:{rows:'Products[Category]',cols:'',slF:'',slV:'',ms:[]}};
+const KEY='daxlab.v1';
+function save(){
+  S.measures=DAX.measures().map(m=>({name:m.name,expr:m.expr}));
+  S.cols=DAX.calcCols().map(c=>({table:c.table,name:c.name,expr:c.expr}));
+  try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}
+}
+function load(){
+  try{ const s=JSON.parse(localStorage.getItem(KEY)||'null'); if(s) S=Object.assign(S,s); }catch(e){}
+  for(const c of S.cols||[]) try{DAX.addCalcColumn(c.table,c.name,c.expr);}catch(e){}
+  for(let pass=0;pass<3;pass++) for(const m of S.measures||[]) if(!DAX.hasMeasure(m.name)) try{DAX.addMeasure(m.name,m.expr);}catch(e){}
+}
+
+// ---------- shared ----------
+function stripName(expr){
+  const m=/^\s*([^=\[\]\("'<>]+?)\s*=(?!=)/.exec(expr);
+  if(m&&!/^VAR\b/i.test(m[1].trim())) return {name:m[1].trim(),expr:expr.slice(m[0].length)};
+  return {name:null,expr};
+}
+function ensureNeeds(l){
+  const added=[];
+  for(const n of (l.needs||[])){
+    const [k,nm]=n.split(':'); const src=PROVIDES[n]; if(!src) continue;
+    if(k==='m'&&!DAX.hasMeasure(nm)){ ensureNeeds(src); DAX.addMeasure(nm,src.solution); added.push('['+nm+']'); }
+    if(k==='c'&&!DAX.calcCols().some(c=>c.name===nm)){ ensureNeeds(src); DAX.addCalcColumn(src.table,nm,src.solution); added.push(src.table+'['+nm+']'); }
+  }
+  return added;
+}
+function contexts(fields){
+  const out=[{label:'Total',f:[]}];
+  for(const k of fields){ const p=parseKey(k); for(const v of DAX.distinct(p.table,p.col)) out.push({label:k+' = '+v,f:[{table:p.table,col:p.col,value:v}]}); }
+  return out;
+}
+function same(a,b){
+  if(a==null||b==null) return a==null&&b==null;
+  if(typeof a==='number'&&typeof b==='number') return Math.abs(a-b)<=1e-6*Math.max(1,Math.abs(a),Math.abs(b));
+  if(typeof a==='string'&&typeof b==='string') return a.toLowerCase()===b.toLowerCase();
+  return a===b;
+}
+function matrixHTML(rowsKey,colsKey,measures,slicer,clickable){
+  const rp=rowsKey?parseKey(rowsKey):null, cp=colsKey?parseKey(colsKey):null;
+  const rv=rp?DAX.distinct(rp.table,rp.col):[], cv=cp?DAX.distinct(cp.table,cp.col):[];
+  const base=slicer?[slicer]:[];
+  const cell=(m,extra)=>{ const filters=base.concat(extra);
+    let v,err=null; try{ v=DAX.evalAst(DAX.getMeasure(m).ast,filters);}catch(e){err=e.message;}
+    const data=esc(JSON.stringify({m,f:filters}));
+    return `<td class="${clickable?'cell':''}" data-c="${data}" ${err?`title="${esc(err)}"`:''}>${err?'<span style="color:var(--err)">error</span>':fmt(v,m)}</td>`; };
+  let h='<table class="m"><thead><tr><th>'+(rp?esc(rowsKey):'')+'</th>';
+  if(cp){ for(const c of cv) for(const m of measures) h+=`<th>${esc(c)}${measures.length>1?'<br><span class="small">'+esc(m)+'</span>':''}</th>`; for(const m of measures) h+=`<th>Total${measures.length>1?'<br><span class="small">'+esc(m)+'</span>':''}</th>`; }
+  else for(const m of measures) h+=`<th>${esc(m)}</th>`;
+  h+='</tr></thead><tbody>';
+  const line=(label,rf,cls)=>{ let r=`<tr class="${cls||''}"><td>${label}</td>`;
+    if(cp){ for(const c of cv) for(const m of measures) r+=cell(m,rf.concat([{table:cp.table,col:cp.col,value:c}])); }
+    for(const m of measures) r+=cell(m,rf); return r+'</tr>'; };
+  for(const v of rv) h+=line(fmtCell(v),[{table:rp.table,col:rp.col,value:v}]);
+  h+=line('<b>Total</b>',[],'tot');
+  return h+'</tbody></table>';
+}
+
+// ---------- lessons UI ----------
+function renderList(){
+  let h='',part='';
+  L.forEach((l,i)=>{ if(l.part!==part){part=l.part;h+=`<div class="part">${esc(part)}</div>`;}
+    h+=`<li data-i="${i}" class="${S.done.includes(l.id)?'done':''} ${i===S.cur?'on':''}"><span class="n">${S.done.includes(l.id)?'✓':i+1}</span>${esc(l.title)}</li>`; });
+  $('#lessonList').innerHTML=h;
+  $$('#lessonList li').forEach(li=>li.onclick=()=>{S.cur=+li.dataset.i;save();renderList();renderLesson();});
+  const d=S.done.length; $('#progTxt').textContent=`${d} of ${L.length} lessons`; $('#progBar').style.width=(d/L.length*100)+'%';
+}
+function renderLesson(){
+  const l=L[S.cur], i=S.cur;
+  const lbl=l.kind==='c'?`<span class="tag c">column</span> ${esc(l.table)}[${esc(l.name)}] =`:`<span class="tag m">measure</span> ${esc(l.name)} =`;
+  const draft=S.drafts[l.id]!=null?S.drafts[l.id]:'';
+  let intro='';
+  if(i===0&&!S.done.length) intro=`<div class="card welcome"><div><div class="eyebrow">Power BI · Digital skills</div><h2>Welcome to the DAX Practice Lab</h2><p><b>DAX</b> (Data Analysis Expressions) is the formula language behind Power BI, Power Pivot in Excel and Analysis Services.</p><p>Work through the 14 short lessons in order. Each one explains an idea, then asks you to write a formula. Press <b>Check</b> and the lab runs your DAX against real sample data to see if it's right.</p><p class="small">Everything runs in your browser. Your progress is saved on this device.</p></div><div><h4>The sample data</h4><p class="small">A cycle-shop business: <b>${DB.Sales.rows.length} Sales</b> order lines across 2024–2025, <b>${DB.Products.rows.length} Products</b> in 3 categories and <b>${DB.Stores.rows.length} Stores</b> in 3 regions. See the <b>Data model</b> tab for details.</p></div></div>`;
+  $('#lessonPane').innerHTML=intro+`<div class="card">
+    <div class="small">Lesson ${i+1} of ${L.length} · ${esc(l.part)}</div>
+    <h2>${esc(l.title)}</h2>
+    <div class="concept">${l.concept}</div>
+    <div class="task"><b>Your task:</b> ${l.task}</div>
+    <div class="editor"><div class="lbl">${lbl}</div><textarea id="lsExpr" spellcheck="false" placeholder="Type your DAX here…">${esc(draft)}</textarea></div>
+    <div class="btns">
+      <button class="b p" id="lsCheck">Check</button>
+      <button class="b" id="lsHint">Hint</button>
+      <button class="b" id="lsSol">Show answer</button>
+      <span class="kbd">Ctrl/⌘ + Enter = check</span>
+      <span style="margin-left:auto"></span>
+      ${i>0?'<button class="b" id="lsPrev">← Previous</button>':''}
+      ${i<L.length-1?'<button class="b" id="lsNext">Next →</button>':''}
+    </div>
+    <div class="msg info hint" id="lsHintBox">💡 ${esc(l.hint)}</div>
+    <div id="lsOut"></div>
+  </div>`;
+  const ta=$('#lsExpr');
+  ta.oninput=()=>{S.drafts[l.id]=ta.value;save();};
+  ta.onkeydown=e=>{ if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();check();} if(e.key==='Tab'){e.preventDefault();const s=ta.selectionStart;ta.setRangeText('    ',s,ta.selectionEnd,'end');} };
+  $('#lsCheck').onclick=()=>check();
+  $('#lsHint').onclick=()=>$('#lsHintBox').style.display='block';
+  $('#lsSol').onclick=()=>{ ta.value=l.solution; S.drafts[l.id]=l.solution; save(); $('#lsOut').innerHTML='<div class="msg info">Here\'s one correct answer. Press <b>Check</b> to run it.</div>'; };
+  if($('#lsPrev')) $('#lsPrev').onclick=()=>{S.cur--;save();renderList();renderLesson();window.scrollTo(0,0);};
+  if($('#lsNext')) $('#lsNext').onclick=()=>{S.cur++;save();renderList();renderLesson();window.scrollTo(0,0);};
+  if(S.done.includes(l.id)&&draft) check(true);
+}
+function check(silent){
+  const l=L[S.cur], out=$('#lsOut');
+  let src=$('#lsExpr').value; const sp=stripName(src); if(sp.name&&sp.name.toLowerCase()===l.name.toLowerCase()) src=sp.expr;
+  let added=[];
+  try{ added=ensureNeeds(l); }catch(e){}
+  const note=added.length?`<div class="msg info">To make this lesson work, ${added.join(' and ')} ${added.length>1?'were':'was'} added to the model for you (from an earlier lesson).</div>`:'';
+  let ast;
+  try{ ast=DAX.parse(src); }catch(e){ out.innerHTML=note+`<div class="msg err"><b>Syntax problem:</b> ${esc(e.message)}</div>`; return; }
+  const solAst=DAX.parse(l.solution);
+  try{
+    if(l.kind==='c'){
+      const mine=DAX.computeColumn(l.table,ast), want=DAX.computeColumn(l.table,solAst);
+      const bad=mine.findIndex((v,i)=>!same(v,want[i]));
+      if(bad>=0){ const r=DB[l.table].rows[bad]; out.innerHTML=note+`<div class="msg err"><b>Not quite.</b> Your formula runs, but on row ${bad+1} (OrderID ${r.OrderID}) it gives <b>${fmt(mine[bad])}</b> and the expected value is <b>${fmt(want[bad])}</b>.</div>`; return; }
+      DAX.addCalcColumn(l.table,l.name,src);
+    } else {
+      const ctxs=contexts(l.check||DEF_CHECK);
+      for(const c of ctxs){
+        const mine=DAX.evalAst(ast,c.f), want=DAX.evalAst(solAst,c.f);
+        if(!same(mine,want)){ out.innerHTML=note+`<div class="msg err"><b>Not quite.</b> Your formula runs, but for <code>${esc(c.label)}</code> it gives <b>${fmt(mine,l.name)}</b> and the expected answer is <b>${fmt(want,l.name)}</b>. Check the task again, or take a hint.</div>`; return; }
+      }
+      DAX.addMeasure(l.name,src);
+    }
+  }catch(e){ out.innerHTML=note+`<div class="msg err"><b>Error:</b> ${esc(e.message)}</div>`; return; }
+  const first=!S.done.includes(l.id);
+  if(first) S.done.push(l.id);
+  if(l.kind==='m'&&S.mx.ms.length<2&&!S.mx.ms.includes(l.name)) S.mx.ms.push(l.name);
+  save(); renderList(); renderFields(); renderMatrixControls();
+  let prev='';
+  if(l.kind==='c'){
+    const T=DB[l.table], cols=['OrderID','Quantity','UnitPrice',l.name];
+    prev='<table class="m"><thead><tr>'+cols.map(c=>`<th>${esc(c)}</th>`).join('')+'</tr></thead><tbody>'+T.rows.slice(0,6).map(r=>'<tr>'+cols.map(c=>`<td>${fmtCell(r[c])}</td>`).join('')+'</tr>').join('')+'</tbody></table><p class="small">First 6 rows of Sales</p>';
+  } else prev=matrixHTML(l.preview,'',[l.name],null,false);
+  out.innerHTML=note+`<div class="msg ok"><b>${first&&!silent?'Correct — nice work!':'Correct.'}</b> ${l.kind==='c'?`The column ${esc(l.table)}[${esc(l.name)}] was added.`:`[${esc(l.name)}] is now saved and available in the Playground.`}</div>
+    <h3>Result</h3>${prev}<div class="concept" style="margin-top:14px">${l.after}</div>
+    ${S.done.length===L.length&&first&&!silent?'<div class="msg ok">🎉 <b>You\'ve completed every lesson!</b> Head to the Playground and try the challenges.</div>':''}`;
+}
+
+// ---------- playground ----------
+let lastTA=null;
+function insert(text){
+  const ta=lastTA||$('#pgExpr'); const s=ta.selectionStart??ta.value.length;
+  ta.setRangeText(text,s,ta.selectionEnd??s,'end'); ta.focus(); ta.dispatchEvent(new Event('input'));
+}
+function renderFields(){
+  let h='';
+  for(const t in DB){
+    h+=`<details open><summary>${esc(t)} <span class="small">(${DB[t].rows.length} rows)</span></summary>`;
+    for(const c of DB[t].cols){ const cc=DAX.calcCols().find(x=>x.table===t&&x.name===c);
+      h+=`<div class="f" data-ins="${esc(t+'['+c+']')}" title="${cc?esc('= '+cc.expr):''}">${esc(c)} ${cc?'<span class="tag c">ƒx</span><button class="x" data-dc="'+esc(t+'|'+c)+'" title="Delete column">✕</button>':''}</div>`; }
+    h+='</details>';
+  }
+  const ms=DAX.measures();
+  h+=`<details open><summary>Measures <span class="small">(${ms.length})</span></summary>`;
+  if(!ms.length) h+=`<p class="small" style="padding-left:16px">None yet. Complete a lesson or <a href="#" id="loadStarter">load the starter measures</a>.</p>`;
+  for(const m of ms) h+=`<div class="f" data-ins="${esc('['+m.name+']')}" data-edit="${esc(m.name)}" title="${esc('= '+m.expr)}"><span class="tag m">Σ</span> ${esc(m.name)}<button class="x" data-dm="${esc(m.name)}" title="Delete measure">✕</button></div>`;
+  h+='</details>';
+  $('#fieldList').innerHTML=h;
+  $$('#fieldList .f').forEach(el=>{
+    el.onclick=e=>{ if(e.target.classList.contains('x')) return; insert(el.dataset.ins); };
+    el.ondblclick=()=>{ if(el.dataset.edit){ const m=DAX.getMeasure(el.dataset.edit); $('#pgName').value=m.name; $('#pgExpr').value=m.expr; } };
+  });
+  $$('#fieldList [data-dm]').forEach(b=>b.onclick=()=>{ DAX.removeMeasure(b.dataset.dm); save(); renderFields(); renderMatrixControls(); });
+  $$('#fieldList [data-dc]').forEach(b=>b.onclick=()=>{ const [t,c]=b.dataset.dc.split('|'); DAX.removeCalcColumn(t,c); save(); renderFields(); renderMatrixControls(); renderData(); });
+  const ls=$('#loadStarter'); if(ls) ls.onclick=e=>{ e.preventDefault(); loadStarter(); };
+}
+function confirmSoft(msg){ try{ return window.confirm(msg); }catch(e){ return true; } }
+function loadStarter(){
+  for(const l of L){ try{ if(l.kind==='c'){ if(!DAX.calcCols().some(c=>c.name===l.name)) DAX.addCalcColumn(l.table,l.name,l.solution);} else if(!DAX.hasMeasure(l.name)) DAX.addMeasure(l.name,l.solution);}catch(e){} }
+  if(!S.mx.ms.length) S.mx.ms=['Total Sales','Order Count'];
+  save(); renderFields(); renderMatrixControls();
+}
+function pgMsg(cls,html){ $('#pgMsg').innerHTML=`<div class="msg ${cls}">${html}</div>`; }
+function pgRead(){ let name=$('#pgName').value.trim(), expr=$('#pgExpr').value; const sp=stripName(expr); if(sp.name&&(!name||sp.name.toLowerCase()===name.toLowerCase())){ name=sp.name; expr=sp.expr; $('#pgName').value=name; $('#pgExpr').value=expr; } return {name,expr}; }
+function pgSaveMeasure(){
+  const {name,expr}=pgRead();
+  try{ const m=DAX.addMeasure(name,expr); if(!S.mx.ms.some(x=>x.toLowerCase()===m.name.toLowerCase())) S.mx.ms.push(m.name); save(); renderFields(); renderMatrixControls();
+    pgMsg('ok',`Saved measure <b>[${esc(m.name)}]</b> — grand total: <b>${fmt(DAX.evalAst(m.ast,[]),m.name)}</b>. It's been added to the matrix below.`);
+  }catch(e){ pgMsg('err',esc(e.message)); }
+}
+function renderMatrixControls(){
+  const opts=sel=>'<option value="">(none)</option>'+allCols().map(c=>`<option ${c.key===sel?'selected':''}>${esc(c.key)}</option>`).join('');
+  $('#mxRows').innerHTML=opts(S.mx.rows); $('#mxCols').innerHTML=opts(S.mx.cols); $('#mxSlF').innerHTML=opts(S.mx.slF);
+  const sp=S.mx.slF?parseKey(S.mx.slF):null;
+  $('#mxSlV').innerHTML=sp?DAX.distinct(sp.table,sp.col).map(v=>`<option ${String(v)===String(S.mx.slV)?'selected':''}>${esc(v)}</option>`).join(''):'<option value="">—</option>';
+  if(sp&&!DAX.distinct(sp.table,sp.col).some(v=>String(v)===String(S.mx.slV))) S.mx.slV=String(DAX.distinct(sp.table,sp.col)[0]);
+  const ms=DAX.measures(); S.mx.ms=S.mx.ms.filter(n=>DAX.hasMeasure(n));
+  $('#mxMeasures').innerHTML=ms.length?ms.map(m=>{const on=S.mx.ms.some(x=>x.toLowerCase()===m.name.toLowerCase());return `<label class="chip ${on?'on':''}"><input type="checkbox" data-m="${esc(m.name)}" ${on?'checked':''}>${esc(m.name)}</label>`;}).join(''):'<span class="small">No measures yet — save one above, or complete a lesson.</span>';
+  $$('#mxMeasures input').forEach(cb=>cb.onchange=()=>{ const n=cb.dataset.m; S.mx.ms=S.mx.ms.filter(x=>x!==n); if(cb.checked) S.mx.ms.push(n); save(); renderMatrixControls(); });
+  renderMatrix();
+}
+function renderMatrix(){
+  const ms=S.mx.ms.filter(n=>DAX.hasMeasure(n));
+  $('#mxCtx').innerHTML='';
+  if(!ms.length){ $('#mxOut').innerHTML='<p class="small">Tick at least one measure to build the matrix.</p>'; return; }
+  let slicer=null; if(S.mx.slF){ const p=parseKey(S.mx.slF); let v=S.mx.slV; const vals=DAX.distinct(p.table,p.col); const hit=vals.find(x=>String(x)===String(v)); slicer={table:p.table,col:p.col,value:hit}; }
+  $('#mxOut').innerHTML=matrixHTML(S.mx.rows,S.mx.cols,ms,slicer,true);
+  $$('#mxOut td.cell').forEach(td=>td.onclick=()=>{
+    $$('#mxOut td.sel').forEach(x=>x.classList.remove('sel')); td.classList.add('sel');
+    const d=JSON.parse(td.dataset.c); const m=DAX.getMeasure(d.m);
+    const fl=d.f.length?d.f.map(x=>`<span class="f">${esc(x.table)}[${esc(x.col)}] = ${esc(typeof x.value==='string'?'"'+x.value+'"':x.value)}</span>`).join(''):'<i>no filters — the whole table is visible</i>';
+    let v; try{v=fmt(DAX.evalAst(m.ast,d.f),d.m);}catch(e){v='<span style="color:var(--err)">'+esc(e.message)+'</span>';}
+    $('#mxCtx').innerHTML=`<div class="concept"><b>Filter context for this cell</b><br>${fl}<br><span class="small">With these filters applied, <code>[${esc(d.m)}] = ${esc(m.expr.replace(/\s+/g,' '))}</code> gives <b>${v}</b>.</span></div>`;
+  });
+}
+const CHAL=[
+ ['Sales for the North region only','North Sales','CALCULATE([Total Sales], Stores[Region] = "North")'],
+ ['How many different products were sold?','Products Sold','DISTINCTCOUNT(Sales[ProductID])'],
+ ['Average quantity per order line','Avg Quantity','AVERAGE(Sales[Quantity])'],
+ ['Total profit (sales minus cost)','Total Profit','[Total Sales] - [Total Cost]'],
+ ['Each category\'s share of its region\'s sales (put Region on rows, Category on columns)','% of Region','DIVIDE([Total Sales], CALCULATE([Total Sales], ALL(Products)))'],
+ ['Year-on-year growth','Sales Growth %','DIVIDE([Total Sales] - [Sales Last Year], [Sales Last Year])'],
+ ['Sales from discounted lines only (UnitPrice below the product\'s ListPrice)','Discounted Sales','SUMX(FILTER(Sales, Sales[UnitPrice] < RELATED(Products[ListPrice])), Sales[Quantity] * Sales[UnitPrice])'],
+ ['Label stores High / Medium / Low with SWITCH','Store Band 3','SWITCH(TRUE(), [Total Sales] >= 15000, "High", [Total Sales] >= 10000, "Medium", "Low")'],
+ ['List the categories sold, as text (try Stores[Store] on rows)','Categories Sold','CONCATENATEX(VALUES(Products[Category]), Products[Category], ", ")']
+];
+function renderChal(){
+  $('#chalList').innerHTML=CHAL.map((c,i)=>`<div class="chal"><b>${i+1}.</b> ${esc(c[0])} <span class="small">— name it <b>${esc(c[1])}</b></span><div class="btns" style="margin-top:6px"><button class="b s" data-r="${i}">Reveal answer</button><button class="b s" data-u="${i}">Load into editor</button></div><pre id="ch${i}">${esc(c[1])} = ${esc(c[2])}</pre></div>`).join('');
+  $$('#chalList [data-r]').forEach(b=>b.onclick=()=>{ const p=$('#ch'+b.dataset.r); p.style.display=p.style.display==='block'?'none':'block'; });
+  $$('#chalList [data-u]').forEach(b=>b.onclick=()=>{ const c=CHAL[+b.dataset.u]; $('#pgName').value=c[1]; $('#pgExpr').value=c[2]; window.scrollTo({top:0,behavior:'smooth'}); pgMsg('info','Loaded — press <b>Save as measure</b> to run it. (Some answers use measures from the lessons; if they\'re missing, use "load the starter measures" in the Fields list.)'); });
+}
+
+// ---------- data tab ----------
+function renderModel(){
+  const box=t=>{ const T=DB[t]; return `<div class="tbl ${t==='Sales'?'fact':''}"><b>${t}</b>${T.cols.map(c=>{const cc=DAX.calcCols().some(x=>x.table===t&&x.name===c); const key=(t==='Products'&&c==='ProductID')||(t==='Stores'&&c==='StoreID'); return `<div class="${key?'key':''} ${cc?'cc':''}">${esc(c)}${cc?' ƒx':''}${key?' 🔑':''}</div>`;}).join('')}</div>`; };
+  $('#modelDiag').innerHTML=box('Products')+`<div class="link"><span>1 &nbsp;→&nbsp; *</span><span class="l"></span><span>ProductID</span></div>`+box('Sales')+`<div class="link"><span>* &nbsp;←&nbsp; 1</span><span class="l"></span><span>StoreID</span></div>`+box('Stores');
+}
+function renderData(){
+  renderModel();
+  const t=$('#dataTable').value||'Sales'; const T=DB[t];
+  $('#dataCount').textContent=`${T.rows.length} rows${T.rows.length>150?' (showing the first 150)':''}`;
+  $('#dataOut').innerHTML='<table class="m"><thead><tr>'+T.cols.map(c=>`<th>${esc(c)}</th>`).join('')+'</tr></thead><tbody>'+T.rows.slice(0,150).map(r=>'<tr>'+T.cols.map(c=>`<td>${fmtCell(r[c])}</td>`).join('')+'</tr>').join('')+'</tbody></table>';
+}
+
+// ---------- cheat sheet ----------
+const CHEAT=[
+ ['Aggregations','SUM(column)','Adds up a numeric column in the current filter context.','SUM(Sales[Quantity])'],
+ ['Aggregations','AVERAGE(column)','Average of a numeric column (blanks ignored).','AVERAGE(Sales[UnitPrice])'],
+ ['Aggregations','MIN(column) / MAX(column)','Smallest / largest value. MIN(a, b) and MAX(a, b) also compare two values.','MAX(Sales[UnitPrice])'],
+ ['Aggregations','COUNT(column) / COUNTA(column)','Counts non-blank numbers / non-blank values.','COUNT(Sales[Quantity])'],
+ ['Aggregations','COUNTROWS(table)','Counts the visible rows of a table.','COUNTROWS(Sales)'],
+ ['Aggregations','DISTINCTCOUNT(column)','Counts the unique values in a column.','DISTINCTCOUNT(Sales[ProductID])'],
+ ['Iterators','SUMX(table, expression)','Works out the expression on each row, then adds the results.','SUMX(Sales, Sales[Quantity] * Sales[UnitPrice])'],
+ ['Iterators','AVERAGEX / MINX / MAXX / COUNTX','Same pattern as SUMX, with a different final step.','AVERAGEX(Sales, Sales[Quantity] * Sales[UnitPrice])'],
+ ['Iterators','CONCATENATEX(table, expression, delimiter)','Joins text from each row into one string.','CONCATENATEX(VALUES(Stores[Region]), Stores[Region], ", ")'],
+ ['Filter context','CALCULATE(expression, filters…)','Evaluates an expression with modified filters. The most important function in DAX.','CALCULATE([Total Sales], Stores[Region] = "East")'],
+ ['Filter context','FILTER(table, condition)','Returns only the rows where the condition is TRUE. Use it for tests across several columns.','CALCULATE([Total Sales], FILTER(Sales, Sales[Quantity] >= 5))'],
+ ['Filter context','ALL(table or column)','Inside CALCULATE: removes filters. As a table: returns every row/value, ignoring filters.','CALCULATE([Total Sales], ALL(Products))'],
+ ['Filter context','REMOVEFILTERS(table or column)','A clearer-named version of ALL for use inside CALCULATE.','CALCULATE([Total Sales], REMOVEFILTERS(Stores))'],
+ ['Filter context','ALLEXCEPT(table, column…)','Inside CALCULATE: removes all filters on a table except those listed.','CALCULATE([Total Sales], ALLEXCEPT(Sales, Stores[Region]))'],
+ ['Filter context','KEEPFILTERS(filter)','Adds a filter without replacing the existing one on that column.','CALCULATE([Total Sales], KEEPFILTERS(Products[Category] = "Bikes"))'],
+ ['Filter context','VALUES(column) / DISTINCT(column)','The unique values visible in the current filter context, as a table.','COUNTROWS(VALUES(Products[Category]))'],
+ ['Filter context','SELECTEDVALUE(column, alternate)','The single value of a column if only one is filtered, otherwise the alternate (or blank).','SELECTEDVALUE(Stores[Region], "All regions")'],
+ ['Filter context','HASONEVALUE(column) / ISFILTERED(column)','TRUE if exactly one value is visible / if the column is directly filtered.','IF(HASONEVALUE(Sales[Year]), [Total Sales])'],
+ ['Filter context','CALCULATETABLE(table, filters…)','Like CALCULATE, but returns a table.','COUNTROWS(CALCULATETABLE(Sales, Stores[Region] = "South"))'],
+ ['Relationships','RELATED(column)','From a row on the "many" side, fetch a value from the "one" side.','SUMX(Sales, Sales[Quantity] * RELATED(Products[UnitCost]))'],
+ ['Relationships','RELATEDTABLE(table)','From a row on the "one" side, get the matching rows of the "many" side.','SUMX(Products, COUNTROWS(RELATEDTABLE(Sales)))'],
+ ['Logic','IF(test, then, else)','Returns one value or another.','IF([Total Sales] > 20000, "Target hit", "Below target")'],
+ ['Logic','SWITCH(expression, value1, result1, …, else)','Choose between many outcomes. SWITCH(TRUE(), …) tests conditions in order.','SWITCH(TRUE(), [Profit Margin] > 0.5, "Great", [Profit Margin] > 0.4, "Good", "Review")'],
+ ['Logic','AND(a, b) / OR(a, b) / NOT(a)','Combine tests. You can also write && and ||.','IF(AND([Total Sales] > 10000, [Profit Margin] > 0.45), "Star", "")'],
+ ['Logic','ISBLANK(value) / BLANK() / COALESCE(a, b)','Test for, return, or replace blanks.','COALESCE([Sales Last Year], 0)'],
+ ['Maths & text','DIVIDE(numerator, denominator, alternate)','Safe division — returns blank (or the alternate) instead of an error when dividing by zero.','DIVIDE([Total Sales], [Order Count])'],
+ ['Maths & text','ROUND(number, digits) / INT / ABS / SQRT','Rounding and basic maths. Operators: + - * / ^','ROUND([Avg Order Value], 0)'],
+ ['Maths & text','FORMAT(value, format)','Turns a number into formatted text, e.g. "0.0%", "£#,##0".','FORMAT([Total Sales], "£#,##0")'],
+ ['Maths & text','& / UPPER / LOWER / LEN / LEFT / RIGHT','Join and change text.','"Sales: " & FORMAT([Total Sales], "£#,##0")'],
+ ['Ranking','RANKX(table, expression, value, order)','Ranks the current value against the expression worked out for every row of the table.','RANKX(ALL(Stores[Store]), [Total Sales])'],
+ ['Variables','VAR name = expression … RETURN result','Name a step, reuse it, and keep formulas readable.','VAR s = [Total Sales]\nVAR c = [Total Cost]\nRETURN s - c']
+];
+function renderCheat(){
+  const q=($('#cheatQ').value||'').toLowerCase(); let h='',grp='';
+  const rows=CHEAT.filter(c=>!q||c.join(' ').toLowerCase().includes(q));
+  for(const [g,sig,desc,ex] of rows){ if(g!==grp){ if(grp) h+='</div>'; grp=g; h+=`<h3>${esc(g)}</h3><div class="cheat">`; }
+    h+=`<div class="fn"><div class="sig">${esc(sig)}</div><p>${esc(desc)}</p><pre>${esc(ex)}</pre><button class="b s" data-try="${esc(ex)}">Try it</button></div>`; }
+  if(grp) h+='</div>'; if(!rows.length) h='<p class="small">No matches.</p>';
+  $('#cheatOut').innerHTML=h;
+  $$('#cheatOut [data-try]').forEach(b=>b.onclick=()=>{ show('play'); $('#pgName').value='Test'; $('#pgExpr').value=b.dataset.try; pgMsg('info','Example loaded. Press <b>Save as measure</b> to run it — if it uses a lesson measure you don\'t have yet, use "load the starter measures" in the Fields list.'); });
+}
+
+// ---------- nav & init ----------
+function show(v){ $$('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v)); $$('.view').forEach(x=>x.classList.toggle('on',x.id==='v-'+v)); if(v==='data') renderData(); if(v==='play') renderMatrixControls(); window.scrollTo(0,0); }
+$$('#nav button').forEach(b=>b.onclick=()=>show(b.dataset.v));
+$('#resetAll').onclick=()=>{ const rb=$('#resetAll'); if(!rb.dataset.armed){ rb.dataset.armed='1'; rb.textContent='Click again to confirm reset'; rb.style.borderColor='var(--err)'; rb.style.color='var(--err)'; setTimeout(()=>{ delete rb.dataset.armed; rb.textContent='Reset all progress'; rb.style.borderColor=''; rb.style.color=''; },4000); return; } delete rb.dataset.armed; rb.textContent='Reset all progress'; rb.style.borderColor=''; rb.style.color=''; DAX.reset(); S={done:[],cur:0,measures:[],cols:[],drafts:{},mx:{rows:'Products[Category]',cols:'',slF:'',slV:'',ms:[]}}; save(); renderList(); renderLesson(); renderFields(); renderMatrixControls(); };
+$('#pgSaveM').onclick=pgSaveMeasure;
+$('#pgSaveC').onclick=()=>{ const {name,expr}=pgRead(); const t=$('#pgColTable').value;
+  try{ DAX.addCalcColumn(t,name,expr); save(); renderFields(); renderMatrixControls(); const v=DB[t].rows.slice(0,5).map(r=>fmtCell(r[name])).join(', '); pgMsg('ok',`Added column <b>${esc(t)}[${esc(name)}]</b>. First values: ${v}… It can now be used in formulas and on matrix rows.`);}catch(e){ pgMsg('err',esc(e.message)); } };
+$('#pgTest').onclick=()=>{ const {expr}=pgRead(); try{ const v=DAX.evalAst(DAX.parse(expr),[]); pgMsg('info',`Grand total (no filters): <b>${fmt(v,$('#pgName').value)}</b>. Nothing was saved.`);}catch(e){ pgMsg('err',esc(e.message)); } };
+$('#pgColTable').innerHTML=Object.keys(DB).map(t=>`<option>${t}</option>`).join('');
+const pe=$('#pgExpr'); pe.onkeydown=e=>{ if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();pgSaveMeasure();} if(e.key==='Tab'){e.preventDefault();const s=pe.selectionStart;pe.setRangeText('    ',s,pe.selectionEnd,'end');} };
+pe.onfocus=()=>lastTA=pe;
+$('#mxRows').onchange=e=>{S.mx.rows=e.target.value;save();renderMatrix();};
+$('#mxCols').onchange=e=>{S.mx.cols=e.target.value;save();renderMatrix();};
+$('#mxSlF').onchange=e=>{S.mx.slF=e.target.value;S.mx.slV='';save();renderMatrixControls();};
+$('#mxSlV').onchange=e=>{S.mx.slV=e.target.value;save();renderMatrix();};
+$('#dataTable').innerHTML=Object.keys(DB).map(t=>`<option>${t}</option>`).join(''); $('#dataTable').onchange=renderData;
+$('#cheatQ').oninput=renderCheat;
+load(); renderList(); renderLesson(); renderFields(); renderMatrixControls(); renderChal(); renderCheat();
+})();
+</script>
+</body>
+</html>
